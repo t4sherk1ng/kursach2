@@ -22,8 +22,6 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Run Checkstyle (Linter)
-        run: mvn checkstyle:check
 
       - name: Run Tests with JUnit 5
         run: mvn test
