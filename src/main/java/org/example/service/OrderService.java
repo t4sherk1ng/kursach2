@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,18 +43,22 @@ public class OrderService {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        List<MenuItem> items = menuItemRepository.findAllById(itemIds);
-        validateItems(items, restaurantId);
+        List<MenuItem> items = menuItemRepository.findMenuItemsByRestaurantAndIds(
+                restaurantId,
+                new ArrayList<>(itemIds) // Конвертируем Set в List
+        );
 
-        double total = calculateTotal(items);
+        validateItems(items, restaurantId);
 
         Order order = new Order();
         order.setUser(user);
         order.setRestaurant(restaurant);
-        order.setItems(new HashSet<>(items));
-        order.setTotalPrice(total);
-        order.setStatus(OrderStatus.CREATED);
         order.setCreatedAt(LocalDateTime.now());
+        order.setStatus(OrderStatus.CREATED);
+
+        for (MenuItem item : items) {
+            order.addItem(item);
+        }
 
         return orderRepository.save(order);
     }
@@ -90,5 +95,10 @@ public class OrderService {
         return items.stream()
                 .mapToDouble(MenuItem::getPrice)
                 .sum();
+    }
+
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
     }
 }

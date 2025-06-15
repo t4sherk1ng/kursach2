@@ -36,6 +36,11 @@ public class Order {
     private double totalPrice;
     private LocalDateTime createdAt;
 
+    public void addItem(MenuItem item) {
+        items.add(item);
+        totalPrice += item.getPrice(); // Автоматически обновляем сумму
+    }
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 }
