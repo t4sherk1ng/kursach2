@@ -1,4 +1,4 @@
-name: Continuous Delivery 
+name: Continuous Delivery
 
 on:
   push:
@@ -19,13 +19,14 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
+          cache: 'maven'
+          server-id: github
+          settings-path: ${{ github.workspace }}
 
       - name: Build and test
-        run: ./gradlew build
+        run: mvn clean verify
 
       - name: Publish to GitHub Packages
-        run: ./gradlew publish
+        run: mvn deploy -DskipTests
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
