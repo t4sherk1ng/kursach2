@@ -21,12 +21,13 @@ jobs:
           java-version: '17'
           cache: 'maven'
           server-id: github
-          settings-path: ${{ github.workspace }}
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
-      - name: Build and test
+      - name: Build and Test
         run: mvn clean verify
 
-      - name: Publish to GitHub Packages
+      - name: Deploy to GitHub Packages
         run: mvn deploy -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
