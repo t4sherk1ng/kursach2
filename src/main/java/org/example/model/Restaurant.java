@@ -27,4 +27,8 @@ public class Restaurant {
         item.setRestaurant(this);
         menu.add(item);
     }
+
+    public List<MenuItem> getMenu() {
+        return menu;
+    }
 }
