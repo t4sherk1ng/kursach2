@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
     @Query("SELECT m FROM MenuItem m WHERE m.restaurant.id = :restaurantId AND m.id IN :itemIds")
     List<MenuItem> findMenuItemsByRestaurantAndIds(
