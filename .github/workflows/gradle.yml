@@ -7,27 +7,30 @@ on:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'maven'
-          server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: GITHUB_TOKEN
+          cache: 'gradle'
 
-      - name: Build and Test
-        run: mvn clean package -DskipTests
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
 
-      - name: Deploy to GitHub Packages
-        run: mvn deploy -DskipTests
+      - name: Build project
+        run: ./gradlew clean build
+
+      - name: Publish to GitHub Packages
+        run: ./gradlew publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
