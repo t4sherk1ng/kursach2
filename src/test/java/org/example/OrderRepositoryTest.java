@@ -26,7 +26,7 @@ class OrderRepositoryTest {
     private OrderRepository orderRepository;
 
     @Test
-    void saveOrder_ValidData_PersistsCorrectly() {
+    public void saveOrder_ValidData_PersistsCorrectly() {
         // Подготовка данных
         User user = new User();
         user.setEmail("user@example.com");
