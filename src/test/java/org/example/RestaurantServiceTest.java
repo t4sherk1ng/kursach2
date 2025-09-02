@@ -36,7 +36,7 @@ public class RestaurantServiceTest {
     void getRestaurantById_ReturnsRestaurant() {
         Restaurant restaurant = new Restaurant();
         restaurant.setName("FindMe");
-        restaurant = restaurantRepository.save(restaurant); // сохраняем напрямую
+        restaurant = restaurantRepository.save(restaurant);
 
         Restaurant found = restaurantService.getRestaurantById(restaurant.getId());
 
