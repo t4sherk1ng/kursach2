@@ -28,41 +28,33 @@ public class PredictionServiceImpl implements PredictionService {
         }
     }
 
-    private float convertTimeToMinutes(String time) {
-        if (time == null || time.isEmpty()) return 0f;
-        String[] parts = time.split(":");
-        return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
-    }
-
     @Override
     public PredictionResponseDto predict(PredictionRequestDto requestDto) {
+        // все 19 признаков CatBoost
         String[] catFeatures = new String[] {
-                requestDto.getDelivery_person_id(),
-                requestDto.getWeather_conditions(),
-                requestDto.getRoad_traffic_density(),
-                requestDto.getType_of_order(),
-                requestDto.getType_of_vehicle(),
-                requestDto.getFestival(),
-                requestDto.getCity()
-        };
-
-        float[] numFeatures = new float[] {
-                (float) requestDto.getDelivery_person_age(),
-                (float) requestDto.getDelivery_person_ratings(),
-                (float) requestDto.getRestaurant_latitude(),
-                (float) requestDto.getRestaurant_longitude(),
-                (float) requestDto.getDelivery_location_latitude(),
-                (float) requestDto.getDelivery_location_longitude(),
-                (float) requestDto.getVehicle_condition(),
-                (float) requestDto.getMultiple_deliveries(),
-                (float) requestDto.getDistance_km(),
-                (float) requestDto.getOrder_price(),
-                convertTimeToMinutes(requestDto.getTime_ordered()),
-                convertTimeToMinutes(requestDto.getTime_order_picked())
+                requestDto.getID() != null ? requestDto.getID() : "",
+                requestDto.getDelivery_person_ID() != null ? requestDto.getDelivery_person_ID() : "",
+                requestDto.getDelivery_person_Age() != null ? requestDto.getDelivery_person_Age() : "",
+                requestDto.getDelivery_person_Ratings() != null ? requestDto.getDelivery_person_Ratings() : "",
+                requestDto.getRestaurant_latitude() != null ? requestDto.getRestaurant_latitude() : "",
+                requestDto.getRestaurant_longitude() != null ? requestDto.getRestaurant_longitude() : "",
+                requestDto.getDelivery_location_latitude() != null ? requestDto.getDelivery_location_latitude() : "",
+                requestDto.getDelivery_location_longitude() != null ? requestDto.getDelivery_location_longitude() : "",
+                requestDto.getOrder_Date() != null ? requestDto.getOrder_Date() : "",
+                requestDto.getTime_Orderd() != null ? requestDto.getTime_Orderd() : "",
+                requestDto.getTime_Order_picked() != null ? requestDto.getTime_Order_picked() : "",
+                requestDto.getWeatherconditions() != null ? requestDto.getWeatherconditions() : "",
+                requestDto.getRoad_traffic_density() != null ? requestDto.getRoad_traffic_density() : "",
+                requestDto.getVehicle_condition() != null ? requestDto.getVehicle_condition() : "",
+                requestDto.getType_of_order() != null ? requestDto.getType_of_order() : "",
+                requestDto.getType_of_vehicle() != null ? requestDto.getType_of_vehicle() : "",
+                requestDto.getMultiple_deliveries() != null ? requestDto.getMultiple_deliveries() : "",
+                requestDto.getFestival() != null ? requestDto.getFestival() : "",
+                requestDto.getCity() != null ? requestDto.getCity() : ""
         };
 
         try {
-            CatBoostPredictions prediction = model.predict(numFeatures, catFeatures);
+            CatBoostPredictions prediction = model.predict(new float[1], catFeatures);
             double predictedValue = prediction.get(0, 0);
             logger.info("Model returned prediction: {}", predictedValue);
             return new PredictionResponseDto(predictedValue);
