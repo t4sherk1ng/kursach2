@@ -1,6 +1,6 @@
 package org.example.controller;
 
-import org.example.model.Order;
+import org.example.dto.OrderDto;
 import org.example.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(
+    public ResponseEntity<OrderDto> createOrder(
             @RequestParam Long userId,
             @RequestParam Long restaurantId,
             @RequestBody Set<Long> itemIds
@@ -26,12 +26,12 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/cancel")
-    public ResponseEntity<Order> cancelOrder(@PathVariable Long orderId) {
+    public ResponseEntity<OrderDto> cancelOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.cancelOrder(orderId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+    public ResponseEntity<OrderDto> getOrder(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 }
