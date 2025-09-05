@@ -3,12 +3,12 @@ package org.example.dto;
 import java.time.LocalDateTime;
 
 public class MenuItemDto {
-    private Long id;              
+    private Long id;
     private String name;
     private double price;
     private boolean available;
     private LocalDateTime createdAt;
-    private Long restaurantId;  
+    private Long restaurantId;
 
     public MenuItemDto() {}
 

@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.15.2'
     implementation 'ai.catboost:catboost-prediction:1.2.5'
     implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+    implementation("org.modelmapper:modelmapper:2.1.1")
 }
 
 group = 'org.example'
