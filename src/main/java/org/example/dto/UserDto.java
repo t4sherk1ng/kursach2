@@ -3,7 +3,7 @@ package org.example.dto;
 import java.time.LocalDateTime;
 
 public class UserDto {
-    private Long id;             // может быть null при создании
+    private Long id;
     private String email;
     private String phone;
     private String address;

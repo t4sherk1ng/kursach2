@@ -5,13 +5,13 @@ import java.util.Set;
 
 public class OrderDto {
 
-    private Long id;                // Может быть null при создании
+    private Long id;
     private Long userId;
     private Long restaurantId;
-    private Set<Long> itemIds;      // ID выбранных блюд
-    private double totalPrice;      // Автоматически считается на бэке
+    private Set<Long> itemIds;
+    private double totalPrice;
     private LocalDateTime createdAt;
-    private String status;          // ENUM как строка
+    private String status;
 
     public OrderDto() {}
 

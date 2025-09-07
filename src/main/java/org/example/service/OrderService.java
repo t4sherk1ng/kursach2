@@ -24,6 +24,7 @@ import java.util.Set;
 @Service
 public class OrderService {
 
+    @Autowired
     private ModelMapper modelMapper;
 
     private final OrderRepository orderRepository;
@@ -66,11 +67,11 @@ public class OrderService {
             order.addItem(item);
         }
 
-        return modelMapper.map(orderRepository.save(order), OrderDto.class);
+        return modelMapper.map(orderRepository.save(modelMapper.map(order, Order.class)), OrderDto.class);
     }
 
     @Transactional
-    public Order cancelOrder(Long orderId) {
+    public OrderDto cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
@@ -79,7 +80,7 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.CANCELLED);
-        return orderRepository.save(order);
+        return modelMapper.map(orderRepository.save(modelMapper.map(order, Order.class)), OrderDto.class);
     }
 
     private void validateItems(List<MenuItem> items, Long restaurantId) {
@@ -103,8 +104,10 @@ public class OrderService {
                 .sum();
     }
 
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+    public OrderDto getOrderById(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return modelMapper.map(order, OrderDto.class);
     }
+
 }

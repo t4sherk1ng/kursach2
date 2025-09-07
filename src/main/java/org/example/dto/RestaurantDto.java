@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class RestaurantDto {
-    private Long id;                // может быть null при создании
+    private Long id;
     private String name;
     private LocalDateTime createdAt;
-    private List<MenuItemDto> menu; // список блюд ресторана
+    private List<MenuItemDto> menu;
 
     public RestaurantDto() {}
 
@@ -22,4 +22,8 @@ public class RestaurantDto {
 
     public List<MenuItemDto> getMenu() { return menu; }
     public void setMenu(List<MenuItemDto> menu) { this.menu = menu; }
+
+    public void addMenuItem(MenuItemDto menuItem) {
+        this.menu.add(menuItem);
+    }
 }

@@ -29,7 +29,8 @@ public class RestaurantController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDto> getRestaurant(@PathVariable Long id) {
-        return ResponseEntity.ok(restaurantService.getRestaurantById(id));
+    public RestaurantDto getRestaurant(@PathVariable Long id) throws Throwable {
+        return (RestaurantDto) restaurantService.getRestaurantById(id)
+                .orElseThrow(() -> new Exception());
     }
 }
