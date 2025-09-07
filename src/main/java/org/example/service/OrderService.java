@@ -1,5 +1,7 @@
 package org.example.service;
 
+import org.example.dto.OrderDto;
+import org.example.dto.UserDto;
 import org.example.model.MenuItem;
 import org.example.model.Restaurant;
 import org.example.model.User;
@@ -9,9 +11,10 @@ import org.example.repository.UserRepository;
 import org.example.model.Order;
 import org.example.model.OrderStatus;
 import org.example.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.modelmapper.ModelMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,6 +23,10 @@ import java.util.Set;
 
 @Service
 public class OrderService {
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
@@ -36,7 +43,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long userId, Long restaurantId, Set<Long> itemIds) {
+    public OrderDto createOrder(Long userId, Long restaurantId, Set<Long> itemIds) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -45,7 +52,7 @@ public class OrderService {
 
         List<MenuItem> items = menuItemRepository.findMenuItemsByRestaurantAndIds(
                 restaurantId,
-                new ArrayList<>(itemIds) // Конвертируем Set в List
+                new ArrayList<>(itemIds)
         );
 
         validateItems(items, restaurantId);
@@ -60,11 +67,11 @@ public class OrderService {
             order.addItem(item);
         }
 
-        return orderRepository.save(order);
+        return modelMapper.map(orderRepository.save(modelMapper.map(order, Order.class)), OrderDto.class);
     }
 
     @Transactional
-    public Order cancelOrder(Long orderId) {
+    public OrderDto cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found"));
 
@@ -73,7 +80,7 @@ public class OrderService {
         }
 
         order.setStatus(OrderStatus.CANCELLED);
-        return orderRepository.save(order);
+        return modelMapper.map(orderRepository.save(modelMapper.map(order, Order.class)), OrderDto.class);
     }
 
     private void validateItems(List<MenuItem> items, Long restaurantId) {
@@ -97,8 +104,10 @@ public class OrderService {
                 .sum();
     }
 
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+    public OrderDto getOrderById(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return modelMapper.map(order, OrderDto.class);
     }
+
 }

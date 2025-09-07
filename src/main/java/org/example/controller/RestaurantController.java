@@ -1,7 +1,7 @@
 package org.example.controller;
 
-import org.example.model.MenuItem;
-import org.example.model.Restaurant;
+import org.example.dto.MenuItemDto;
+import org.example.dto.RestaurantDto;
 import org.example.service.RestaurantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +16,21 @@ public class RestaurantController {
     }
 
     @PostMapping
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<RestaurantDto> createRestaurant(@RequestBody RestaurantDto restaurant) {
         return ResponseEntity.ok(restaurantService.createRestaurant(restaurant));
     }
 
     @PostMapping("/{restaurantId}/menu")
-    public ResponseEntity<Restaurant> addMenuItem(
+    public ResponseEntity<RestaurantDto> addMenuItem(
             @PathVariable Long restaurantId,
-            @RequestBody MenuItem menuItem
+            @RequestBody MenuItemDto menuItem
     ) {
         return ResponseEntity.ok(restaurantService.addMenuItem(restaurantId, menuItem));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> getRestaurant(@PathVariable Long id) {
-        return ResponseEntity.ok(restaurantService.getRestaurantById(id));
+    public RestaurantDto getRestaurant(@PathVariable Long id) throws Throwable {
+        return (RestaurantDto) restaurantService.getRestaurantById(id)
+                .orElseThrow(() -> new Exception());
     }
 }

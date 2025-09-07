@@ -27,22 +27,18 @@ class OrderRepositoryTest {
 
     @Test
     public void saveOrder_ValidData_PersistsCorrectly() {
-        // Подготовка данных
         User user = new User();
         user.setEmail("user@example.com");
         entityManager.persist(user);
-
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Pizza Hut");
         entityManager.persist(restaurant);
-
         MenuItem item = new MenuItem();
         item.setName("Pizza");
         item.setPrice(10.99);
         item.setAvailable(true);
         item.setRestaurant(restaurant);
         entityManager.persist(item);
-
         Order order = new Order();
         order.setUser(user);
         order.setRestaurant(restaurant);
@@ -50,11 +46,7 @@ class OrderRepositoryTest {
         order.setCreatedAt(LocalDateTime.now());
         order.setItems(Collections.singleton(item));
         order.setTotalPrice(10.99);
-
-        // Сохранение
         Order saved = orderRepository.save(order);
-
-        // Проверка
         assertNotNull(saved.getId());
         assertEquals(OrderStatus.CREATED, saved.getStatus());
         assertEquals(1, saved.getItems().size());
