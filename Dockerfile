@@ -1,26 +1,18 @@
-# Базовый образ с Java 17
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 
-# Создаем рабочую директорию
 WORKDIR /app
 
-# Копируем Gradle wrapper и build.gradle
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
-COPY settings.gradle .
+# Устанавливаем базовые библиотеки (для нативных библиотек)
+RUN apt-get update && apt-get install -y \
+    libc6 \
+    libgcc-s1 \
+    libstdc++6 \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
-# Копируем весь проект
-COPY . .
+# Копируем готовый jar
+COPY build/libs/kursach2-1.0-SNAPSHOT.jar .
 
-# Делаем gradlew исполняемым
-RUN chmod +x gradlew
-
-# Собираем jar
-RUN ./gradlew clean bootJar
-
-# Указываем порт
 EXPOSE 8080
 
-# Запускаем приложение
-ENTRYPOINT ["java","-jar","build/libs/kursach2-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "kursach2-1.0-SNAPSHOT.jar"]
